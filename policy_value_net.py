@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-An implementation of the policyValueNet in PyTorch
-Tested in PyTorch 0.2.0 and 0.3.0
 
-@author: Junxiao Song
-"""
 
 import torch
 import torch.nn as nn
@@ -22,6 +17,7 @@ def set_learning_rate(optimizer, lr):
 
 class Net(nn.Module):
     """policy-value network module"""
+
     def __init__(self, board_width, board_height):
         super(Net, self).__init__()
 
@@ -48,7 +44,7 @@ class Net(nn.Module):
         # action policy layers
         x_act = F.relu(self.act_conv1(x))
         x_act = x_act.view(-1, 4*self.board_width*self.board_height)
-        x_act = F.log_softmax(self.act_fc1(x_act))
+        x_act = F.log_softmax(self.act_fc1(x_act), dim=1)
         # state value layers
         x_val = F.relu(self.val_conv1(x))
         x_val = x_val.view(-1, 2*self.board_width*self.board_height)
@@ -59,6 +55,7 @@ class Net(nn.Module):
 
 class PolicyValueNet():
     """policy-value network """
+
     def __init__(self, board_width, board_height,
                  model_file=None, use_gpu=False):
         self.use_gpu = use_gpu
@@ -88,7 +85,14 @@ class PolicyValueNet():
             act_probs = np.exp(log_act_probs.data.cpu().numpy())
             return act_probs, value.data.cpu().numpy()
         else:
-            state_batch = Variable(torch.FloatTensor(state_batch))
+
+            state_batch = Variable(torch.FloatTensor(np.array(state_batch)))
+
+            '''
+            如果，没有np.array这一步，而只有 state_batch = Variable(torch.FloatTensor(state_batch))，那么
+            UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow.
+            Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor.
+            '''
             log_act_probs, value = self.policy_value_net(state_batch)
             act_probs = np.exp(log_act_probs.data.numpy())
             return act_probs, value.data.numpy()
@@ -101,14 +105,14 @@ class PolicyValueNet():
         """
         legal_positions = board.availables
         current_state = np.ascontiguousarray(board.current_state().reshape(
-                -1, 4, self.board_width, self.board_height))
+            -1, 4, self.board_width, self.board_height))
         if self.use_gpu:
             log_act_probs, value = self.policy_value_net(
-                    Variable(torch.from_numpy(current_state)).cuda().float())
+                Variable(torch.from_numpy(current_state)).cuda().float())
             act_probs = np.exp(log_act_probs.data.cpu().numpy().flatten())
         else:
             log_act_probs, value = self.policy_value_net(
-                    Variable(torch.from_numpy(current_state)).float())
+                Variable(torch.from_numpy(current_state)).float())
             act_probs = np.exp(log_act_probs.data.numpy().flatten())
         act_probs = zip(legal_positions, act_probs[legal_positions])
         value = value.data[0][0]
@@ -122,9 +126,12 @@ class PolicyValueNet():
             mcts_probs = Variable(torch.FloatTensor(mcts_probs).cuda())
             winner_batch = Variable(torch.FloatTensor(winner_batch).cuda())
         else:
-            state_batch = Variable(torch.FloatTensor(state_batch))
-            mcts_probs = Variable(torch.FloatTensor(mcts_probs))
-            winner_batch = Variable(torch.FloatTensor(winner_batch))
+            state_batch = Variable(torch.FloatTensor(np.array(state_batch)))
+            mcts_probs = Variable(torch.FloatTensor(np.array(mcts_probs)))
+            winner_batch = Variable(torch.FloatTensor(np.array(winner_batch)))
+            # state_batch = Variable(torch.FloatTensor(state_batch))
+            # mcts_probs = Variable(torch.FloatTensor(mcts_probs))
+            # winner_batch = Variable(torch.FloatTensor(winner_batch))
 
         # zero the parameter gradients
         self.optimizer.zero_grad()
@@ -136,18 +143,25 @@ class PolicyValueNet():
         # define the loss = (z - v)^2 - pi^T * log(p) + c||theta||^2
         # Note: the L2 penalty is incorporated in optimizer
         value_loss = F.mse_loss(value.view(-1), winner_batch)
-        policy_loss = -torch.mean(torch.sum(mcts_probs*log_act_probs, 1))
+
+        policy_loss = -torch.mean(torch.sum(mcts_probs*log_act_probs, dim=1))
+        # policy_loss = -torch.mean(torch.sum(mcts_probs*log_act_probs, 1))
         loss = value_loss + policy_loss
         # backward and optimize
         loss.backward()
         self.optimizer.step()
-        # calc policy entropy, for monitoring only
+        # calculate policy entropy, for monitoring only
         entropy = -torch.mean(
-                torch.sum(torch.exp(log_act_probs) * log_act_probs, 1)
-                )
-        return loss.data[0], entropy.data[0]
-        #for pytorch version >= 0.5 please use the following line instead.
-        #return loss.item(), entropy.item()
+            torch.sum(torch.exp(log_act_probs) * log_act_probs, dim=1)
+        )
+        # entropy = -torch.mean(
+        #     torch.sum(torch.exp(log_act_probs) * log_act_probs, 1)
+        # )
+        return loss.item(), entropy.item()
+        # return loss.data[0], entropy.data[0] 不太行
+
+        # for pytorch version >= 0.5 please use the following line instead.
+        # return loss.item(), entropy.item()
 
     def get_policy_param(self):
         net_params = self.policy_value_net.state_dict()
