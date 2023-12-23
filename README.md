@@ -26,8 +26,14 @@ run<br>
 `conda create -n tf python=3.6`
 
 ### Install tensorflow 1.9.0
+We recommend you to visit [https://pypi.tuna.tsinghua.edu.cn/simple/tensorflow/](https://pypi.tuna.tsinghua.edu.cn/simple/tensorflow/) and download one of the following 3 according your device.
+```
+tensorflow-1.9.0-cp36-cp36m-macosx_10_11_x86_64.whl
+tensorflow-1.9.0-cp36-cp36m-manylinux1_x86_64.whl
+tensorflow-1.9.0-cp36-cp36m-win_amd64.whl
+```
 
-`pip install file path in your device`
+`pip install`＋ `file path in your device`
 e.g.run<br> `pip install D:\Download\myTensorflowWHL\tensorflow-1.9.0-cp36-cp36m-win_amd64.whl`
 
 ### Activate this environment
