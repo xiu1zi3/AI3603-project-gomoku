@@ -25,6 +25,11 @@ command for a suitable environment
 run<br>
 `conda create -n tf python=3.6`
 
+### Install tensorflow 1.9.0
+
+`pip install file path in your device`
+e.g.run<br> `pip install D:\Download\myTensorflowWHL\tensorflow-1.9.0-cp36-cp36m-win_amd64.whl`
+
 ### Activate this environment
 run<br>
 `conda activate tf`<br>
