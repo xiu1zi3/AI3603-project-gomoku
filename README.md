@@ -32,9 +32,10 @@ tensorflow-1.9.0-cp36-cp36m-macosx_10_11_x86_64.whl
 tensorflow-1.9.0-cp36-cp36m-manylinux1_x86_64.whl
 tensorflow-1.9.0-cp36-cp36m-win_amd64.whl
 ```
-
+finish downloading, run<br>
 `pip install`＋ `file path in your device`
-e.g.run<br> `pip install D:\Download\myTensorflowWHL\tensorflow-1.9.0-cp36-cp36m-win_amd64.whl`
+e.g.run<br> 
+`pip install D:\Download\myTensorflowWHL\tensorflow-1.9.0-cp36-cp36m-win_amd64.whl`
 
 ### Activate this environment
 run<br>
