@@ -19,21 +19,22 @@ Open a terminal and run `python game.py`
 ## Appendix
 command for a suitable environment
 ### Create a new environment
-run `conda create tf --all`
+run `conda create tf python=3.6`
 
 ### Activate this environment
-run `conda activate tf`
-or you can try
+run `conda activate tf`<br>
+or you can try<br>
 `conda.bat activate tf`
 
-after using, run `conda deactivate tf`
-or you can try `conda.bat deactivate tf`
+after using, run `conda deactivate tf`<br>
+or you can try<br>
+`conda.bat deactivate tf`
 
 ### removal
-if you no longer need this environment,
+if you no longer need this environment,<br>
 run `conda remove -n tf --all`
 
 ### about NumPy
-run `pip install numpy==1.22 -i https://pypi.tuna.tsinghua.edu.cn/simple/`
+run `pip install numpy==1.22 -i https://pypi.tuna.tsinghua.edu.cn/simple/`<br>
 since tensorflow-intel 2.13.0 requires numpy<=1.24.3,>=1.22, while scipy 1.6.2 requires numpy<1.23.0,>=1.16.5
 
