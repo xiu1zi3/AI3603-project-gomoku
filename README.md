@@ -3,8 +3,8 @@ an AI agent capable of playing the game of Gomoku by implementing a search algor
 
 ### Requirements
 - python 3
-- tensorflow 1.X is available now([policy_value_net.py](policy_value_net.py))
-- pytorch framework(policy_value_net_pytorch.py) is under construction
+- tensorflow 1.X is available now ([policy_value_net.py](policy_value_net.py))
+- pytorch framework ([policy_value_net_pytorch.py](policy_value_net_pytorch.py)) is under construction
 
 ### Train
 Open a terminal and run `python train.py`
