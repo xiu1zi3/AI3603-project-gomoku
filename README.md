@@ -19,7 +19,7 @@ Open a terminal and run `python game.py`
 ## Appendix
 command for a suitable environment
 ### Create a new environment
-run `conda create tf python=3.6`
+run `conda create -n tf python=3.6`
 
 ### Activate this environment
 run `conda activate tf`<br>
