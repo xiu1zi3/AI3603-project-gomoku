@@ -10,12 +10,12 @@
 from __future__ import print_function
 from collections import OrderedDict
 import pickle
-import torch
+
 
 from game import Board, Game
 from mcts_enhanced import MCTSPlayer
 # from mcts_pure import MCTSPlayer as MCTS_Pure
-from policy_value_net import PolicyValueNet  # Pytorch
+from policy_value_net import PolicyValueNet  # tensorflow
 
 
 class Human(object):
